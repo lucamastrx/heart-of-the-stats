@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<h1>Heart of the Stats</h1>
+<p class="lead">A small PyScript app to compute draw probabilities for Yu‑Gi‑Oh! decks.</p>
+
+
+<section class="card">
+<label>Deck size (total cards)
+<input id="total_cards" type="number" min="1" value="40" />
+</label>
+
+
+<label>Number of target cards in deck
+<input id="target_cards" type="number" min="0" value="3" />
+</label>
+
+
+<label>Cards drawn
+<input id="draws" type="number" min="0" value="5" />
+</label>
+
+
+<button py-click="calculate_probability">Calculate probability</button>
+
+
+<p id="output" class="output"></p>
+</section>
+
+
+<footer>
+<small>Built with PyScript • Placeholders for more features</small>
+</footer>
+</main>
+
+
+<py-script>
+from math import comb
+from js import document
+
+
+def get_int(el_id):
+try:
+return int(document.getElementById(el_id).value)
+except Exception:
+return 0
+
+
+
+
+def calculate_probability(evt=None):
+n = get_int('total_cards')
+k = get_int('target_cards')
+d = get_int('draws')
+out = document.getElementById('output')
+
+
+if not (1 <= d <= n) or k < 0 or n <= 0:
+out.innerText = 'Please enter valid numbers.'
+return
+
+
+if d > n:
+out.innerText = 'You cannot draw more cards than the deck size.'
+return
+
+
+# probability of drawing at least one target card in d draws (hypergeometric complement)
+try:
+prob = 1 - comb(n - k, d) / comb(n, d)
+except Exception:
+prob = 0.0
+
+
+out.innerText = f'Probability to draw at least one target card: {prob*100:.2f}%'
+
+
+</py-script>
+</body>
+</html>
